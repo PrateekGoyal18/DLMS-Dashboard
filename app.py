@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 # import secrets
 # secrets.token_urlsafe(16)
-app.config['SECRET_KEY'] = 'KIxqJtOFwM0ZFTnyvpZpfg'
+app.config['SECRET_KEY'] = 'OYsOFfvZ-6DRJomg04GTig'
 
 users = pyrebase.initialize_app(userAuthConfig)
 auth = users.auth()
