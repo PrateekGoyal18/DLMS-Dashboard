@@ -35,10 +35,9 @@
     <button class="btn btn-secondary" type="submit" name="submit" value="DataDownload" id="submit">
     	Data Download <i class="fa fa-cloud-download" style="font-size: 20px"></i>
     </button>
-
 </form>
 
-<div class="container" style="display: flex; justify-content: center; flex-wrap: wrap; flex-direction: column;">
+<div class="container-fluid">
 	<div style="display: flex; justify-content: center;">
 		<select class="hidden" id="parameterSelection">
 		    <option disabled selected>-- Choose the parameter --</option>
@@ -49,45 +48,122 @@
 		    <option value="Power">Power</option>
 		    <option value="Energy">Energy</option>
 		    <option value="Temperature">Temperature</option>
+		    <option value="all">All Charts</option>
 		</select>
 	</div>
 
-	<div style="display: flex; justify-content: center;">
+	<div class="individualCharts" style="display: flex; justify-content: center;">
 		<div id="chart"></div>
+	</div>
+
+	<div class="allCharts" style="display: flex; justify-content: center; flex-wrap: wrap; flex-direction: row;">
+		<div id="Voltage"></div>
+		<div id="Current"></div>
+		<div id="Frequency"></div>
+		<div id="Power Factor"></div>
+		<div id="Power"></div>
+		<div id="Energy"></div>
+		<div id="Temperature"></div>
 	</div>
 </div>
 
 <script type="text/javascript">
 	var paramValues = JSON.parse('{{paramValues | tojson}}');
-	console.log(paramValues);
-
 	$('#parameterSelection').on('change', function() {
-		if(this.value==='Voltage' || this.value==='Current' || this.value==='Frequency' || this.value==='Power Factor' || this.value==='Temperature') {
-			var data = {
-			  x: paramValues['Time'],
-			  y: paramValues[this.value],
-			  type: 'scatter'
+		if(this.value!=='all') {
+			var chartData = [];
+			var layout = {
+				xaxis: {
+					title: 'Time'
+				},
+				yaxis: {
+					title: this.value
+				}
 			};
-			Plotly.newPlot('chart', [data]);
+			if(this.value==='Voltage' || this.value==='Current' || this.value==='Frequency' || this.value==='Power Factor' || this.value==='Temperature') {
+				$('div.individualCharts').css({'display':'flex'});
+				$('div.allCharts').css({'display':'none'});
+				var data = {
+				  x: paramValues['Time'],
+				  y: paramValues[this.value],
+				  mode: 'line'
+				};
+				chartData = [data];
+			}
+			else if(this.value==='Power' || this.value==='Energy') {
+				$('div.individualCharts').css({'display':'flex'});
+				$('div.allCharts').css({'display':'none'});
+				var data1 = {
+				  x: paramValues['Time'],
+				  y: paramValues['Apparent '+this.value],
+				  mode: 'line',
+				  name: 'Apparent '+this.value
+				};
+				var data2 = {
+				  x: paramValues['Time'],
+				  y: paramValues['Active '+this.value],
+				  mode: 'line',
+				  name: 'Active '+this.value
+				};
+				var data3 = {
+				  x: paramValues['Time'],
+				  y: paramValues['Reactive '+this.value],
+				  mode: 'line',
+				  name: 'Reactive '+this.value
+				};
+				chartData = [data1, data2, data3];
+			}
+			Plotly.newPlot('chart', chartData, layout);
 		}
-		else if(this.value==='Power' || this.value==='Energy') {
-			var data1 = {
-			  x: paramValues['Time'],
-			  y: paramValues['Apparent '+this.value],
-			  type: 'scatter'
-			};
-			var data2 = {
-			  x: paramValues['Time'],
-			  y: paramValues['Active '+this.value],
-			  type: 'scatter'
-			};
-			var data3 = {
-			  x: paramValues['Time'],
-			  y: paramValues['Reactive '+this.value],
-			  type: 'scatter'
-			};
-			console.log([data1, data2, data3])
-			Plotly.newPlot('chart', [data1, data2, data3]);
+
+		
+		else if(this.value==='all') {
+			$('div.individualCharts').css({'display':'none'});
+			$('div.allCharts').css({'display':'flex'});
+			var params = ['Voltage', 'Current', 'Frequency', 'Power Factor', 'Power', 'Energy', 'Temperature']
+			params.forEach((item, index) => {
+				var chartData = [];
+				var layout = {
+					title: item + ' Plot',
+					width: 600,
+					xaxis: {
+						title: 'Time'
+					},
+					yaxis: {
+						title: item
+					}
+				};
+				if(index!==4 && index!==5) {
+					var data = {
+					  x: paramValues['Time'],
+					  y: paramValues[item],
+					  mode: 'line'
+					};
+					chartData = [data]
+					
+				} else {
+					var data1 = {
+					  x: paramValues['Time'],
+					  y: paramValues['Apparent '+item],
+					  mode: 'line',
+					  name: 'Apparent '+item
+					};
+					var data2 = {
+					  x: paramValues['Time'],
+					  y: paramValues['Active '+item],
+					  mode: 'line',
+					  name: 'Active '+item
+					};
+					var data3 = {
+					  x: paramValues['Time'],
+					  y: paramValues['Reactive '+item],
+					  mode: 'line',
+					  name: 'Reactive '+item
+					};
+					chartData = [data1, data2, data3];
+				}
+				Plotly.newPlot(item, chartData, layout);
+			});
 		}
 	});
 </script>

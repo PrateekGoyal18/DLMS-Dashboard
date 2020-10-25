@@ -42,17 +42,19 @@
     }
 </style>
 
-<form method="POST" class="hidden" id="form" style="position: relative; margin: 20px">
-    <div class="form-group" style="display: flex; justify-content: space-between;">
+<div style="position: relative; margin: 20px">
+    <div style="display: flex; justify-content: space-between;">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/home">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">Date</li>
           </ol>
         </nav>
-        <button type="submit" class="btn btn-outline-secondary" name="LogOut" value="True">
-            <a href="/logout" class="logout"><i class="fa fa-sign-out" aria-hidden="true" style="margin-right: 3px;"></i>Log out</a>
-        </button>
+        <form method="POST">
+            <button type="submit" class="btn btn-outline-secondary" name="LogOut" value="True">
+                <a href="/logout" class="logout"><i class="fa fa-sign-out" aria-hidden="true" style="margin-right: 3px;"></i>Log out</a>
+            </button>
+        </form>
     </div>
 
     <div class="container-fluid" style="display: flex; justify-content: center; align-items: center; margin-top: 8%; text-align: center;">
@@ -95,8 +97,10 @@
             <div class="col-sm-6 col-md-4">
                 <div class="row">
                     <div class="col-md-12" style="display: flex; justify-content: center; align-items: center; margin-top: 8%; text-align: center;">
-                        <input class="border rounded form-control-lg" style="color: #000000; width: 200px; border-color: #000000; border-width: 10px; margin-bottom: 5px;" required name="date" id="date" name="date" placeholder="dd-mm-yyyy" pttern="[0-9]{2}-[0-9]{2}-[0-9]{4}">
-                        <button class="btn btn-primary text-center bg-primary border rounded mr-1" type="submit" name="datePage" value="dateValue" id="submit" style="width: 80px;">Submit</button>
+                        <form method="POST">
+                            <input class="border rounded form-control-lg" style="color: #000000; width: 200px; border-color: #000000; border-width: 10px; margin-bottom: 5px;" required name="date" id="date" name="date" placeholder="dd-mm-yyyy" pttern="[0-9]{2}-[0-9]{2}-[0-9]{4}">
+                            <button class="btn btn-primary text-center bg-primary border rounded mr-1" type="submit" name="datePage" value="dateValue" id="submit" style="width: 80px;">Submit</button>
+                        </form>
                     </div>
                     <div class="col-md-12" style="margin-top: 25px;">
                         <form method="POST">
@@ -116,5 +120,5 @@
             </div>
         </div>
     </div>
-</form>
+</div>
 {% endblock content %}
