@@ -68,16 +68,13 @@ def date():
     if request.method == 'GET':
         if session.get("authenticated", None):
             meterVal = session.get("meterVal", None)
-            if meterVal == 'M1':
-                meterConfig = meter1Config
-            elif meterVal == 'M2':
-                meterConfig = meter2Config
+            meterConfig = METERNAME_CONFIG_MAPPING[meterVal]
             meter = pyrebase.initialize_app(meterConfig)
             db = meter.database()
             dates = list(db.child("/Timestamp Data").shallow().get().val())
             dates.sort(key=lambda date:datetime.strptime(date, '%d-%m-%Y'))
-            static = db.child("/Static Information").get().val()
-            name, sno, year = static['Manufacturer Name'], static['Serial No'], static['Manufacture Year']
+            staticData = db.child("/Static Information").get().val()
+            name, sno, year = staticData['Manufacturer Name'], staticData['Serial No'], staticData['Manufacture Year']
             meterInfo = [name, sno, year]
             return render_template('date.html', meterInfo=meterInfo, dates=dates)
         else:
@@ -98,10 +95,7 @@ def live():
     if request.method == 'GET':
         if session.get("authenticated", None):
             meterVal = session.get("meterVal", None)
-            if meterVal == 'M1':
-                meterConfig = meter1Config
-            elif meterVal == 'M2':
-                meterConfig = meter2Config
+            meterConfig = METERNAME_CONFIG_MAPPING[meterVal]
             dbURL = meterConfig['databaseURL'] + '/Real Time Data.json'
             return render_template('live.html', dbURL=dbURL)
         else:
@@ -115,10 +109,7 @@ def chart():
         if session.get("authenticated", None):
             meterVal = session.get("meterVal", None)
             dateVal = session.get("dateVal", None)
-            if meterVal == 'M1':
-                meterConfig = meter1Config
-            elif meterVal == 'M2':
-                meterConfig = meter2Config
+            meterConfig = METERNAME_CONFIG_MAPPING[meterVal]
             meter = pyrebase.initialize_app(meterConfig)
             db = meter.database()
             times = list(db.child("/Timestamp Data/"+dateVal).shallow().get().val())

@@ -30,3 +30,16 @@ meter2Config = {
     "appId": "1:323859279661:web:048e30369b3ef58bcd6da4",
     "measurementId": "G-ZGWWMNPG54"
 }
+
+METERNAME_CONFIG_MAPPING = {
+    'M1': meter1Config,
+    'M2': meter2Config,
+    'M3': meter1Config,
+    'M4': meter2Config,
+    'M5': meter1Config,
+    'M6': meter2Config,
+    'M7': meter1Config,
+    'M8': meter2Config,
+    'M9': meter1Config,
+    'M10': meter2Config,
+}
