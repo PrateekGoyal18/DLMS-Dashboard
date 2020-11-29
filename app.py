@@ -17,7 +17,7 @@ app.config['SECRET_KEY'] = 'OYsOFfvZ-6DRJomg04GTig'
 users = pyrebase.initialize_app(userAuthConfig)
 auth = users.auth()
 userDb = users.database()
-authenticated = False
+isAuthenticated = False
 
 
 # Login Page
@@ -31,7 +31,7 @@ def login():
         if request.form['auth'] == 'SignIn':
             try:
                 login = user_login(auth, request.form['email'], request.form['password'])
-                session["authenticated"] = True
+                session["isAuthenticated"] = True
                 return redirect('/home')
             except requests.exceptions.HTTPError as e:
                 return render_template('login.html', message='Wrong Email ID/Password.')
@@ -52,11 +52,10 @@ def login():
 @app.route('/home', methods=["GET", "POST"])
 def meter():
     if request.method == 'GET':
-        if session.get("authenticated", None):
+        if session.get("isAuthenticated", None):
             return render_template('home.html')
         else:
-            return('<h2>User not logged in</h2>')
-    
+            return redirect('/')
     elif request.method == 'POST':
         session["meterVal"] = request.form['meterSelect']
         return redirect('/date')
@@ -66,19 +65,24 @@ def meter():
 @app.route('/date', methods=["GET", "POST"])
 def date():
     if request.method == 'GET':
-        if session.get("authenticated", None):
+        if session.get("isAuthenticated", None):
             meterVal = session.get("meterVal", None)
             meterConfig = METERNAME_CONFIG_MAPPING[meterVal]
             meter = pyrebase.initialize_app(meterConfig)
             db = meter.database()
             dates = list(db.child("/Timestamp Data").shallow().get().val())
+            for date in dates:
+                try:
+                    datetime.strptime(date, '%d-%m-%Y')
+                except:
+                    dates.remove(date)
             dates.sort(key=lambda date:datetime.strptime(date, '%d-%m-%Y'))
             staticData = db.child("/Static Information").get().val()
             name, sno, year = staticData['Manufacturer Name'], staticData['Serial No'], staticData['Manufacture Year']
             meterInfo = [name, sno, year]
-            return render_template('date.html', meterInfo=meterInfo, dates=dates)
+            return render_template('date.html', meterVal=meterVal, meterInfo=meterInfo, dates=dates)
         else:
-            return('<h2>User not logged in</h2>')
+            return redirect('/')
 
     elif request.method == 'POST':
         if request.form['datePage'] == 'dateValue':
@@ -93,20 +97,20 @@ def date():
 @app.route('/live', methods=["GET", "POST"])
 def live():
     if request.method == 'GET':
-        if session.get("authenticated", None):
+        if session.get("isAuthenticated", None):
             meterVal = session.get("meterVal", None)
             meterConfig = METERNAME_CONFIG_MAPPING[meterVal]
             dbURL = meterConfig['databaseURL'] + '/Real Time Data.json'
-            return render_template('live.html', dbURL=dbURL)
+            return render_template('live.html', dbURL=dbURL, meterVal=meterVal)
         else:
-            return('<h2>User not logged in</h2>')
+            return redirect('/')
 
 
 # Charts Page
 @app.route('/charts', methods=["GET", "POST"])
 def chart():
     if request.method == 'GET':
-        if session.get("authenticated", None):
+        if session.get("isAuthenticated", None):
             meterVal = session.get("meterVal", None)
             dateVal = session.get("dateVal", None)
             meterConfig = METERNAME_CONFIG_MAPPING[meterVal]
@@ -117,11 +121,13 @@ def chart():
             df = pd.DataFrame(data.val())
             df.loc['Power'].to_json('power.json')
             dfPower = pd.read_json('power.json')
+            # print(dfPower)
             df.loc['Energy'].to_json('energy.json')
             dfEnergy = pd.read_json('energy.json')
-            os.remove('power.json')
-            os.remove('energy.json')
+            # os.remove('power.json')
+            # os.remove('energy.json')
             df.drop(['Power', 'Energy'], axis = 0, inplace = True)
+            # print(dfPower.T)
             df = df.append([dfPower, dfEnergy]).T
             df.reset_index(level=0, inplace=True)
             df.rename(columns={"index": "Time"}, inplace=True)
@@ -129,9 +135,9 @@ def chart():
             for param in df.columns:
                 paramValues[param] = df[param].tolist()
             df.to_csv('data.csv', index=False)
-            return render_template('charts.html', paramValues=paramValues)
+            return render_template('charts.html', paramValues=paramValues, dateVal=dateVal.replace('-', '/'))
         else:
-            return('<h2>User not logged in</h2>')
+            return redirect('/')
 
     elif request.method == 'POST':
         if request.form['submit'] == 'DataDownload':
@@ -145,7 +151,7 @@ def chart():
 @app.route("/logout")
 def logout():
     session.clear()
-    session["authenticated"] = False
+    session["isAuthenticated"] = False
     return render_template('logout.html')
 
 if __name__ == '__main__':

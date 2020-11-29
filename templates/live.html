@@ -5,379 +5,381 @@
 <link rel="stylesheet" type="text/css" href="static/css/live.css">
 
 <style type="text/css">
-    .breadcrumb {
-        padding: 5px !important;
-        margin: 0px !important;
-        background-color: transparent;
-    }
+	.breadcrumb {
+		padding: 5px !important;
+		margin: 0px !important;
+		background-color: transparent;
+	}
 
-    .logout {
-        color: inherit !important;
-    }
-    .logout:hover { 
-        text-decoration: none !important;
-    }
+	.logout {
+		color: inherit !important;
+	}
+
+	.logout:hover {
+		text-decoration: none !important;
+	}
 </style>
 
 <script type="text/javascript">
-    var arr_voltage=[], arr_current=[], arr_frequency=[], arr_pf=[],
-        arr_apparentPower=[], arr_activePower=[], arr_reactivePower=[],
-        arr_apparentEnergy=[], arr_activeEnergy=[], arr_reactiveEnergy=[],
-        arr_temperature=[];
+	var arr_voltage = [], arr_current = [], arr_frequency = [], arr_pf = [],
+		arr_apparentPower = [], arr_activePower = [], arr_reactivePower = [],
+		arr_apparentEnergy = [], arr_activeEnergy = [], arr_reactiveEnergy = [],
+		arr_temperature = [];
 
-    $(document).ready(function() {
-        setInterval(function() {
-            $.getJSON('{{ dbURL }}',function(paramData)
-            {
-                var voltage = paramData.Voltage;
-                var current = paramData.Current;
-                var frequency = paramData.Frequency;
-                var pf = paramData['Power Factor'];
-                var apparentPower = paramData.Power['Apparent Power'];
-                var activePower = paramData.Power['Active Power'];
-                var reactivePower = paramData.Power['Reactive Power'];
-                var apparentEnergy = paramData.Energy['Apparent Energy'];
-                var activeEnergy = paramData.Energy['Active Energy'];
-                var reactiveEnergy = paramData.Energy['Reactive Energy'];
-                var temperature = paramData.Temperature;
+	$(document).ready(function () {
+		setInterval(function () {
+			$.getJSON('{{ dbURL }}', function (paramData) {
+				var voltage = paramData.Voltage;
+				var current = paramData.Current;
+				var frequency = paramData.Frequency;
+				var pf = paramData['Power Factor'];
+				var apparentPower = paramData.Power['Apparent Power'];
+				var activePower = paramData.Power['Active Power'];
+				var reactivePower = paramData.Power['Reactive Power'];
+				var apparentEnergy = paramData.Energy['Apparent Energy'];
+				var activeEnergy = paramData.Energy['Active Energy'];
+				var reactiveEnergy = paramData.Energy['Reactive Energy'];
+				var temperature = paramData.Temperature;
 
-                $('#voltage').html(voltage);
-                $('#current').html(current);
-                $('#frequency').html(frequency);
-                $('#apparentPower').html(apparentPower);
-                $('#activePower').html(activePower);
-                $('#reactivePower').html(reactivePower);
-                $('#apparentEnergy').html(apparentEnergy);
-                $('#activeEnergy').html(activeEnergy);
-                $('#reactiveEnergy').html(reactiveEnergy);
-                $('#pf').html(pf);
-                $('#temperature').html(temperature);
-                $('#DateTime').html('<strong>Values last updated at: </strong>' + paramData['Date'] + ' ; ' + paramData['Time']);
+				$('#voltage').html(voltage);
+				$('#current').html(current);
+				$('#frequency').html(frequency);
+				$('#apparentPower').html(apparentPower);
+				$('#activePower').html(activePower);
+				$('#reactivePower').html(reactivePower);
+				$('#apparentEnergy').html(apparentEnergy);
+				$('#activeEnergy').html(activeEnergy);
+				$('#reactiveEnergy').html(reactiveEnergy);
+				$('#pf').html(pf);
+				$('#temperature').html(temperature);
+				$('#DateTime').html('<strong>Values last updated at: </strong>' + paramData['Date'] + ' ; ' + paramData['Time']);
 
-                google.charts.load("current", {packages:["imagesparkline"]});
-                google.charts.setOnLoadCallback(drawChart);
-                function drawChart() 
-                {
-                    arr_voltage.push(voltage);
-                    arr_current.push(current);
-                    arr_frequency.push(frequency);
-                    arr_apparentPower.push(apparentPower);
-                    arr_activePower.push(activePower);
-                    arr_reactivePower.push(reactivePower);
-                    arr_apparentEnergy.push(apparentEnergy);
-                    arr_activeEnergy.push(activeEnergy);
-                    arr_reactiveEnergy.push(reactiveEnergy);
-                    arr_pf.push(pf);
-                    arr_temperature.push(temperature);
+				google.charts.load("current", { packages: ["imagesparkline"] });
+				google.charts.setOnLoadCallback(drawChart);
+				function drawChart() {
+					arr_voltage.push(voltage);
+					arr_current.push(current);
+					arr_frequency.push(frequency);
+					arr_apparentPower.push(apparentPower);
+					arr_activePower.push(activePower);
+					arr_reactivePower.push(reactivePower);
+					arr_apparentEnergy.push(apparentEnergy);
+					arr_activeEnergy.push(activeEnergy);
+					arr_reactiveEnergy.push(reactiveEnergy);
+					arr_pf.push(pf);
+					arr_temperature.push(temperature);
 
-                    var dataArray_voltage = [['']];
-                    var dataArray_current = [['']];
-                    var dataArray_frequency = [['']];
-                    var dataArray_apparentPower = [['']];
-                    var dataArray_activePower = [['']];
-                    var dataArray_reactivePower = [['']];
-                    var dataArray_apparentEnergy = [['']];
-                    var dataArray_activeEnergy = [['']];
-                    var dataArray_reactiveEnergy = [['']];
-                    var dataArray_pf = [['']];
-                    var dataArray_temperature = [['']];
+					var dataArray_voltage = [['']];
+					var dataArray_current = [['']];
+					var dataArray_frequency = [['']];
+					var dataArray_apparentPower = [['']];
+					var dataArray_activePower = [['']];
+					var dataArray_reactivePower = [['']];
+					var dataArray_apparentEnergy = [['']];
+					var dataArray_activeEnergy = [['']];
+					var dataArray_reactiveEnergy = [['']];
+					var dataArray_pf = [['']];
+					var dataArray_temperature = [['']];
 
-                    for (var n = 0; n < arr_voltage.length; n++) 
-                    {
-                        dataArray_voltage.push([arr_voltage[n]]);
-                        dataArray_current.push([arr_current[n]]);
-                        dataArray_frequency.push([arr_frequency[n]]);
-                        dataArray_apparentPower.push([arr_apparentPower[n]]);
-                        dataArray_activePower.push([arr_activePower[n]]);
-                        dataArray_reactivePower.push([arr_reactivePower[n]]);
-                        dataArray_apparentEnergy.push([arr_apparentEnergy[n]]);
-                        dataArray_activeEnergy.push([arr_activeEnergy[n]]);
-                        dataArray_reactiveEnergy.push([arr_reactiveEnergy[n]]);
-                        dataArray_pf.push([arr_pf[n]]);
-                        dataArray_temperature.push([arr_temperature[n]]);
-                    }
-                    var dataVoltage = new google.visualization.arrayToDataTable(dataArray_voltage);
-                    var dataCurrent = new google.visualization.arrayToDataTable(dataArray_current);
-                    var dataFrequency = new google.visualization.arrayToDataTable(dataArray_frequency);
-                    var dataApparentPower = new google.visualization.arrayToDataTable(dataArray_apparentPower);
-                    var dataActivePower = new google.visualization.arrayToDataTable(dataArray_activePower);
-                    var dataReactivePower = new google.visualization.arrayToDataTable(dataArray_reactivePower);
-                    var dataApparentEnergy = new google.visualization.arrayToDataTable(dataArray_apparentEnergy);
-                    var dataActiveEnergy = new google.visualization.arrayToDataTable(dataArray_activeEnergy);
-                    var dataReactiveEnergy = new google.visualization.arrayToDataTable(dataArray_reactiveEnergy);
-                    var dataPF = new google.visualization.arrayToDataTable(dataArray_pf);
-                    var dataTemperature = new google.visualization.arrayToDataTable(dataArray_temperature);
+					for (var n = 0; n < arr_voltage.length; n++) {
+						dataArray_voltage.push([arr_voltage[n]]);
+						dataArray_current.push([arr_current[n]]);
+						dataArray_frequency.push([arr_frequency[n]]);
+						dataArray_apparentPower.push([arr_apparentPower[n]]);
+						dataArray_activePower.push([arr_activePower[n]]);
+						dataArray_reactivePower.push([arr_reactivePower[n]]);
+						dataArray_apparentEnergy.push([arr_apparentEnergy[n]]);
+						dataArray_activeEnergy.push([arr_activeEnergy[n]]);
+						dataArray_reactiveEnergy.push([arr_reactiveEnergy[n]]);
+						dataArray_pf.push([arr_pf[n]]);
+						dataArray_temperature.push([arr_temperature[n]]);
+					}
+					var dataVoltage = new google.visualization.arrayToDataTable(dataArray_voltage);
+					var dataCurrent = new google.visualization.arrayToDataTable(dataArray_current);
+					var dataFrequency = new google.visualization.arrayToDataTable(dataArray_frequency);
+					var dataApparentPower = new google.visualization.arrayToDataTable(dataArray_apparentPower);
+					var dataActivePower = new google.visualization.arrayToDataTable(dataArray_activePower);
+					var dataReactivePower = new google.visualization.arrayToDataTable(dataArray_reactivePower);
+					var dataApparentEnergy = new google.visualization.arrayToDataTable(dataArray_apparentEnergy);
+					var dataActiveEnergy = new google.visualization.arrayToDataTable(dataArray_activeEnergy);
+					var dataReactiveEnergy = new google.visualization.arrayToDataTable(dataArray_reactiveEnergy);
+					var dataPF = new google.visualization.arrayToDataTable(dataArray_pf);
+					var dataTemperature = new google.visualization.arrayToDataTable(dataArray_temperature);
 
-                    var chartVoltage = new google.visualization.ImageSparkLine(document.getElementById('chartVoltage_div'));
-                    var chartCurrent = new google.visualization.ImageSparkLine(document.getElementById('chartCurrent_div'));
-                    var chartFrequency = new google.visualization.ImageSparkLine(document.getElementById('chartFrequency_div'));
-                    var chartApparentPower = new google.visualization.ImageSparkLine(document.getElementById('chartApparentPower_div'));
-                    var chartActivePower = new google.visualization.ImageSparkLine(document.getElementById('chartActivePower_div'));
-                    var chartReactivePower = new google.visualization.ImageSparkLine(document.getElementById('chartReactivePower_div'));
+					var chartVoltage = new google.visualization.ImageSparkLine(document.getElementById('chartVoltage_div'));
+					var chartCurrent = new google.visualization.ImageSparkLine(document.getElementById('chartCurrent_div'));
+					var chartFrequency = new google.visualization.ImageSparkLine(document.getElementById('chartFrequency_div'));
+					var chartApparentPower = new google.visualization.ImageSparkLine(document.getElementById('chartApparentPower_div'));
+					var chartActivePower = new google.visualization.ImageSparkLine(document.getElementById('chartActivePower_div'));
+					var chartReactivePower = new google.visualization.ImageSparkLine(document.getElementById('chartReactivePower_div'));
 
-                    var chartApparentEnergy = new google.visualization.ImageSparkLine(document.getElementById('chartApparentEnergy_div'));
-                    var chartActiveEnergy = new google.visualization.ImageSparkLine(document.getElementById('chartActiveEnergy_div'));
-                    var chartReactiveEnergy = new google.visualization.ImageSparkLine(document.getElementById('chartReactiveEnergy_div'));
-                    var chartPF = new google.visualization.ImageSparkLine(document.getElementById('chartPF_div'));
-                    var chartTemperature = new google.visualization.ImageSparkLine(document.getElementById('chartTemperature_div'));
-                    
-                    var options = {
-                        title: '',
-                        width: 200, height: 50, 
-                        fill: false,
-                        showAxisLines: false,  
-                        showValueLabels: true, 
-                        labelPosition: 'left'
-                    };
-                    chartVoltage.draw(dataVoltage, options);
-                    chartCurrent.draw(dataCurrent, options);
-                    chartFrequency.draw(dataFrequency, options);
-                    chartApparentPower.draw(dataApparentPower, options);
-                    chartActivePower.draw(dataActivePower, options);
-                    chartReactivePower.draw(dataReactivePower, options);
-                    chartApparentEnergy.draw(dataApparentEnergy, options);
-                    chartActiveEnergy.draw(dataActiveEnergy, options);
-                    chartReactiveEnergy.draw(dataReactiveEnergy, options);
-                    chartPF.draw(dataPF, options);
-                    chartTemperature.draw(dataTemperature, options);
-                }
-              });
-        }, 10000);
-     });
+					var chartApparentEnergy = new google.visualization.ImageSparkLine(document.getElementById('chartApparentEnergy_div'));
+					var chartActiveEnergy = new google.visualization.ImageSparkLine(document.getElementById('chartActiveEnergy_div'));
+					var chartReactiveEnergy = new google.visualization.ImageSparkLine(document.getElementById('chartReactiveEnergy_div'));
+					var chartPF = new google.visualization.ImageSparkLine(document.getElementById('chartPF_div'));
+					var chartTemperature = new google.visualization.ImageSparkLine(document.getElementById('chartTemperature_div'));
+
+					var options = {
+						title: '',
+						width: 200, height: 50,
+						fill: false,
+						showAxisLines: false,
+						showValueLabels: true,
+						labelPosition: 'left'
+					};
+					chartVoltage.draw(dataVoltage, options);
+					chartCurrent.draw(dataCurrent, options);
+					chartFrequency.draw(dataFrequency, options);
+					chartApparentPower.draw(dataApparentPower, options);
+					chartActivePower.draw(dataActivePower, options);
+					chartReactivePower.draw(dataReactivePower, options);
+					chartApparentEnergy.draw(dataApparentEnergy, options);
+					chartActiveEnergy.draw(dataActiveEnergy, options);
+					chartReactiveEnergy.draw(dataReactiveEnergy, options);
+					chartPF.draw(dataPF, options);
+					chartTemperature.draw(dataTemperature, options);
+				}
+			});
+		}, 10000);
+	});
 </script>
 
 <div style="margin: 20px 0 0 0">
 
-    <form method="POST" class="hidden" id="form" style="position: relative; margin: 20px">
-        <div class="form-group" style="display: flex; justify-content: space-between;">
-            <nav aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/home">Home</a></li>
-                <li class="breadcrumb-item"><a href="/date">Date</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Live</li>
-              </ol>
-            </nav>
-            <button type="submit" class="btn btn-outline-secondary" name="LogOut" value="True">
-                <a href="/logout" class="logout"><i class="fa fa-sign-out" aria-hidden="true" style="margin-right: 3px;"></i>Log out</a>
-            </button>
-        </div>
-    </form>
+	<form method="POST" class="hidden" id="form" style="position: relative; margin: 20px">
+		<div class="form-group" style="display: flex; justify-content: space-between;">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="/home">Home</a></li>
+					<li class="breadcrumb-item"><a href="/date">Date</a></li>
+					<li class="breadcrumb-item active" aria-current="page">Live ({{ meterVal[0] }}eter {{ meterVal[1] }})</li>
+				</ol>
+			</nav>
+			<button type="submit" class="btn btn-outline-secondary" name="LogOut" value="True">
+				<a href="/logout" class="logout"><i class="fa fa-sign-out" aria-hidden="true" style="margin-right: 3px;"></i>Log
+					out</a>
+			</button>
+		</div>
+	</form>
 
-    <!-- 1st row -->
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow border-left-primary py-2">
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col mr-2">
-                                <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span>Voltage</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0" id="voltage"><span></span></div>
-                            </div>
-                            <div class="col-auto">
-                                <h1>V</h1>
-                            </div>
-                        </div>
-                        <div id="chartVoltage_div"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow border-left-success py-2 neuromorphism">
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col mr-2">
-                                <div class="text-uppercase text-success font-weight-bold text-xs mb-1"><span>Current</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0" id="current"><span></span></div>
-                            </div>
-                            <div class="col-auto">
-                                <h1>A</h1>
-                            </div>
-                        </div>
-                        <div id="chartCurrent_div"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow border-left-info py-2 neuromorphism">
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col mr-2">
-                                <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span>Frequency</span></div>
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col-auto">
-                                        <div class="text-dark font-weight-bold h5 mb-0 mr-3" id="frequency"><span></span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <h1>Hz</h1>
-                            </div>
-                        </div>
-                        <div id="chartFrequency_div"></div>
-                    </div>
-                </div>
-            </div>
-        
-        </div>
-    </div>
+	<!-- 1st row -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-xl-3 mb-4">
+				<div class="card shadow border-left-primary py-2">
+					<div class="card-body">
+						<div class="row align-items-center no-gutters">
+							<div class="col mr-2">
+								<div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span>Voltage</span></div>
+								<div class="text-dark font-weight-bold h5 mb-0" id="voltage"><span></span></div>
+							</div>
+							<div class="col-auto">
+								<h1>V</h1>
+							</div>
+						</div>
+						<div id="chartVoltage_div"></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 col-xl-3 mb-4">
+				<div class="card shadow border-left-success py-2 neuromorphism">
+					<div class="card-body">
+						<div class="row align-items-center no-gutters">
+							<div class="col mr-2">
+								<div class="text-uppercase text-success font-weight-bold text-xs mb-1"><span>Current</span></div>
+								<div class="text-dark font-weight-bold h5 mb-0" id="current"><span></span></div>
+							</div>
+							<div class="col-auto">
+								<h1>A</h1>
+							</div>
+						</div>
+						<div id="chartCurrent_div"></div>
+					</div>
+				</div>
+			</div>
 
-    <!-- 2nd row -->
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow border-left-warning py-2 neuromorphism">
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col mr-2">
-                                <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span>Apparent Power</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0" id="apparentPower"><span></span></div>
-                            </div>
-                            <div class="col-auto">
-                                <h1>VA</h1>
-                            </div>
-                        </div>
-                        <div id="chartApparentPower_div"></div>
-                    </div>
-                </div>
-            </div>
+			<div class="col-md-6 col-xl-3 mb-4">
+				<div class="card shadow border-left-info py-2 neuromorphism">
+					<div class="card-body">
+						<div class="row align-items-center no-gutters">
+							<div class="col mr-2">
+								<div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span>Frequency</span></div>
+								<div class="row no-gutters align-items-center">
+									<div class="col-auto">
+										<div class="text-dark font-weight-bold h5 mb-0 mr-3" id="frequency"><span></span></div>
+									</div>
+								</div>
+							</div>
+							<div class="col-auto">
+								<h1>Hz</h1>
+							</div>
+						</div>
+						<div id="chartFrequency_div"></div>
+					</div>
+				</div>
+			</div>
 
-            <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow border-left-danger py-2 neuromorphism">
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col mr-2">
-                                <div class="text-uppercase text-danger font-weight-bold text-xs mb-1"><span>Active Power</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0" id="activePower"><span></span></div>
-                            </div>
-                            <div class="col-auto">
-                                <h1>W</h1>
-                            </div>
-                        </div>
-                        <div id="chartActivePower_div"></div>
-                    </div>
-                </div>
-            </div>
+		</div>
+	</div>
 
-            <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow border-left-secondary py-2 neuromorphism">
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col mr-2">
-                                <div class="text-uppercase text-secondary font-weight-bold text-xs mb-1"><span>Reactive Power</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0" id="reactivePower"><span></span></div>
-                            </div>
-                            <div class="col-auto">
-                                <h1>VAr</h1>
-                            </div>
-                        </div>
-                        <div id="chartReactivePower_div"></div>
-                    </div>
-                </div>
-            </div>
-        
-        </div>
-    </div>
+	<!-- 2nd row -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-xl-3 mb-4">
+				<div class="card shadow border-left-warning py-2 neuromorphism">
+					<div class="card-body">
+						<div class="row align-items-center no-gutters">
+							<div class="col mr-2">
+								<div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span>Apparent Power</span></div>
+								<div class="text-dark font-weight-bold h5 mb-0" id="apparentPower"><span></span></div>
+							</div>
+							<div class="col-auto">
+								<h1>VA</h1>
+							</div>
+						</div>
+						<div id="chartApparentPower_div"></div>
+					</div>
+				</div>
+			</div>
 
-    <!-- 3rd row -->
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow border-left-warning py-2 neuromorphism">
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col mr-2">
-                                <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span>Apparent Energy</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0" id="apparentEnergy"><span></span></div>
-                            </div>
-                            <div class="col-auto">
-                                <h1>VAh</h1>
-                            </div>
-                        </div>
-                        <div id="chartApparentEnergy_div"></div>
-                    </div>
-                </div>
-            </div>
+			<div class="col-md-6 col-xl-3 mb-4">
+				<div class="card shadow border-left-danger py-2 neuromorphism">
+					<div class="card-body">
+						<div class="row align-items-center no-gutters">
+							<div class="col mr-2">
+								<div class="text-uppercase text-danger font-weight-bold text-xs mb-1"><span>Active Power</span></div>
+								<div class="text-dark font-weight-bold h5 mb-0" id="activePower"><span></span></div>
+							</div>
+							<div class="col-auto">
+								<h1>W</h1>
+							</div>
+						</div>
+						<div id="chartActivePower_div"></div>
+					</div>
+				</div>
+			</div>
 
-            <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow border-left-danger py-2 neuromorphism">
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col mr-2">
-                                <div class="text-uppercase text-danger font-weight-bold text-xs mb-1"><span>Active Energy</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0" id="activeEnergy"><span></span></div>
-                            </div>
-                            <div class="col-auto">
-                                <h1>Wh</h1>
-                            </div>
-                        </div>
-                        <div id="chartActiveEnergy_div"></div>
-                    </div>
-                </div>
-            </div>
+			<div class="col-md-6 col-xl-3 mb-4">
+				<div class="card shadow border-left-secondary py-2 neuromorphism">
+					<div class="card-body">
+						<div class="row align-items-center no-gutters">
+							<div class="col mr-2">
+								<div class="text-uppercase text-secondary font-weight-bold text-xs mb-1"><span>Reactive Power</span>
+								</div>
+								<div class="text-dark font-weight-bold h5 mb-0" id="reactivePower"><span></span></div>
+							</div>
+							<div class="col-auto">
+								<h1>VAr</h1>
+							</div>
+						</div>
+						<div id="chartReactivePower_div"></div>
+					</div>
+				</div>
+			</div>
 
-            <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow border-left-secondary py-2 neuromorphism">
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col mr-2">
-                                <div class="text-uppercase text-secondary font-weight-bold text-xs mb-1"><span>Reactive Energy</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0" id="reactiveEnergy"><span></span></div>
-                            </div>
-                            <div class="col-auto">
-                                <h1>VArh</h1>
-                            </div>
-                        </div>
-                        <div id="chartReactiveEnergy_div"></div>
-                    </div>
-                </div>
-            </div>
-        
-        </div>
-    </div>
+		</div>
+	</div>
+
+	<!-- 3rd row -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-xl-3 mb-4">
+				<div class="card shadow border-left-warning py-2 neuromorphism">
+					<div class="card-body">
+						<div class="row align-items-center no-gutters">
+							<div class="col mr-2">
+								<div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span>Apparent Energy</span>
+								</div>
+								<div class="text-dark font-weight-bold h5 mb-0" id="apparentEnergy"><span></span></div>
+							</div>
+							<div class="col-auto">
+								<h1>VAh</h1>
+							</div>
+						</div>
+						<div id="chartApparentEnergy_div"></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-6 col-xl-3 mb-4">
+				<div class="card shadow border-left-danger py-2 neuromorphism">
+					<div class="card-body">
+						<div class="row align-items-center no-gutters">
+							<div class="col mr-2">
+								<div class="text-uppercase text-danger font-weight-bold text-xs mb-1"><span>Active Energy</span></div>
+								<div class="text-dark font-weight-bold h5 mb-0" id="activeEnergy"><span></span></div>
+							</div>
+							<div class="col-auto">
+								<h1>Wh</h1>
+							</div>
+						</div>
+						<div id="chartActiveEnergy_div"></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-6 col-xl-3 mb-4">
+				<div class="card shadow border-left-secondary py-2 neuromorphism">
+					<div class="card-body">
+						<div class="row align-items-center no-gutters">
+							<div class="col mr-2">
+								<div class="text-uppercase text-secondary font-weight-bold text-xs mb-1"><span>Reactive Energy</span>
+								</div>
+								<div class="text-dark font-weight-bold h5 mb-0" id="reactiveEnergy"><span></span></div>
+							</div>
+							<div class="col-auto">
+								<h1>VArh</h1>
+							</div>
+						</div>
+						<div id="chartReactiveEnergy_div"></div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
 </div>
 
 <!-- 4th row -->
 <div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow border-left-primary py-2 neuromorphism">
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col mr-2">
-                                <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span>Power Factor</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0" id="pf"><span></span></div>
-                            </div>
-                            <div class="col-auto">
-                                <h1></h1>
-                            </div>
-                        </div>
-                        <div id="chartPF_div"></div>
-                    </div>
-                </div>
-            </div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-xl-3 mb-4">
+				<div class="card shadow border-left-primary py-2 neuromorphism">
+					<div class="card-body">
+						<div class="row align-items-center no-gutters">
+							<div class="col mr-2">
+								<div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span>Power Factor</span></div>
+								<div class="text-dark font-weight-bold h5 mb-0" id="pf"><span></span></div>
+							</div>
+							<div class="col-auto">
+								<h1></h1>
+							</div>
+						</div>
+						<div id="chartPF_div"></div>
+					</div>
+				</div>
+			</div>
 
-            <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow border-left-danger py-2 neuromorphism">
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col mr-2">
-                                <div class="text-uppercase text-danger font-weight-bold text-xs mb-1"><span>Temperature</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0" id="temperature"><span></span></div>
-                            </div>
-                            <div class="col-auto">
-                                <h1>&#x2103;</h1>
-                            </div>
-                        </div>
-                        <div id="chartTemperature_div"></div>
-                    </div>
-                </div>
-            </div>
-        
-        </div>
-    </div>
+			<div class="col-md-6 col-xl-3 mb-4">
+				<div class="card shadow border-left-danger py-2 neuromorphism">
+					<div class="card-body">
+						<div class="row align-items-center no-gutters">
+							<div class="col mr-2">
+								<div class="text-uppercase text-danger font-weight-bold text-xs mb-1"><span>Temperature</span></div>
+								<div class="text-dark font-weight-bold h5 mb-0" id="temperature"><span></span></div>
+							</div>
+							<div class="col-auto">
+								<h1>&#x2103;</h1>
+							</div>
+						</div>
+						<div id="chartTemperature_div"></div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
 
 </div>
 

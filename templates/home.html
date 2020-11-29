@@ -2,150 +2,195 @@
 
 {% block content %}
 <style type="text/css">
-    .breadcrumb {
-        padding: 5px !important;
-        margin: 0px !important;
-        background-color: transparent;
-    }
+	.breadcrumb {
+		padding: 5px !important;
+		margin: 0px !important;
+		background-color: transparent;
+	}
 
-    .logout {
-        color: inherit !important;
-    }
-    .logout:hover { 
-        text-decoration: none !important;
-    }
+	.logout {
+		color: inherit !important;
+	}
+
+	.logout:hover {
+		text-decoration: none !important;
+	}
+
+	.mobile-center {
+    justify-content: flex-start;
+  }
+	@media screen and (max-width: 320px) {
+  .mobile-center {
+    justify-content: center;
+  }
+}
 </style>
 
+<script type="text/javascript">
+	// $(window).on('load', function () {
+	// 	console.log('here');
+	// 	// window.history.forward(1);
+	// 	history.forward();
+	// })
+	// javascript:window.history.forward(1);
+	// function noBack() { window.history.forward(); }
+  //   noBack();
+  //   window.onload = noBack;
+  //   window.onpageshow = function (evt) { if (evt.persisted) noBack(); }
+  //   window.onunload = function () { void (0); }
+</script>
+
 <form method="POST" class="hidden" id="form" style="position: relative; margin: 20px">
-    <div class="form-group" style="display: flex; justify-content: space-between;">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">Home</li>
-            </ol>
-        </nav>
-        <button type="submit" class="btn btn-outline-secondary" name="LogOut" value="True">
-            <a href="/logout" class="logout"><i class="fa fa-sign-out" aria-hidden="true" style="margin-right: 3px;"></i>Log out</a>
-        </button>
-    </div>
+	<div class="form-group" style="display: flex; justify-content: space-between;">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item active" aria-current="page">Home</li>
+			</ol>
+		</nav>
+		<button type="submit" class="btn btn-outline-secondary" name="LogOut" value="True">
+			<a href="/logout" class="logout"><i class="fa fa-sign-out" aria-hidden="true" style="margin-right: 3px;"></i>Log
+				out</a>
+		</button>
+	</div>
 
-    <div class="container-fluid" style="display: flex; justify-content: center; align-items: center; padding: 5% 8%;">
-        <div class="row">
-            <div class="col-md-12">
-                
-                <!-- Text -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <h2 class="text-center">Select a Meter</h2>
-                    </div>
-                </div>
+	<div class="container-fluid" style="display: flex; justify-content: center; align-items: center; padding: 5% 8%;">
+		<div class="row" class="mobile-center">
+			<div class="col-md-12">
 
-                <!-- Meter Selection -->
-                <div class="row">
-                    <!-- Meter 1 -->
-                    <div class="col-auto text-center">
-                        <div class="row">
-                            <div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col text-center"><button class="btn btn-outline-primary text-left border rounded border-primary" type="submit" name="meterSelect" value="M1">Meter 1</button>
-                            </div>
-                        </div>
-                    </div>
+				<!-- Text -->
+				<div class="row">
+					<div class="col-md-12">
+						<h2 class="text-center">Select a Meter</h2>
+					</div>
+				</div>
 
-                    <!-- Meter 2 -->
-                    <div class="col-auto text-center">
-                        <div class="row">
-                            <div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col text-center"><button class="btn btn-outline-primary text-left border rounded border-primary" type="submit" name="meterSelect" value="M2">Meter 2</button></div>
-                        </div>
-                    </div>
-                    
-                    <!-- Meter 3 -->
-                    <div class="col-auto text-center">
-                        <div class="row">
-                            <div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col text-center"><button class="btn btn-outline-primary text-left border rounded border-primary" type="submit" name="meterSelect" value="M3">Meter 3</button></div>
-                        </div>
-                    </div>
+				<!-- Meter Selection -->
+				<div class="row">
+					<!-- Meter 1 -->
+					<div class="col-auto text-center">
+						<div class="row">
+							<div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;">
+							</div>
+						</div>
+						<div class="row">
+							<div class="col text-center"><button
+									class="btn btn-outline-primary text-left border rounded border-primary" type="submit"
+									name="meterSelect" value="M1">Meter 1</button>
+							</div>
+						</div>
+					</div>
 
-                    <!-- Meter 4 -->
-                    <div class="col-auto text-center">
-                        <div class="row">
-                            <div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col text-center"><button class="btn btn-outline-primary text-left border rounded border-primary" type="submit" name="meterSelect" value="M4">Meter 4</button></div>
-                        </div>
-                    </div>
+					<!-- Meter 2 -->
+					<div class="col-auto text-center">
+						<div class="row">
+							<div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;"></div>
+						</div>
+						<div class="row">
+							<div class="col text-center"><button
+									class="btn btn-outline-primary text-left border rounded border-primary" type="submit"
+									name="meterSelect" value="M2">Meter 2</button></div>
+						</div>
+					</div>
 
-                    <!-- Meter 5 -->
-                    <div class="col-auto text-center">
-                        <div class="row">
-                            <div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col text-center"><button class="btn btn-outline-primary text-left border rounded border-primary" type="submit" name="meterSelect" value="M5">Meter 5</button></div>
-                        </div>
-                    </div>
+					<!-- Meter 3 -->
+					<div class="col-auto text-center">
+						<div class="row">
+							<div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;"></div>
+						</div>
+						<div class="row">
+							<div class="col text-center"><button
+									class="btn btn-outline-primary text-left border rounded border-primary" type="submit"
+									name="meterSelect" value="M3">Meter 3</button></div>
+						</div>
+					</div>
 
-                    <!-- Meter 6 -->
-                    <div class="col-auto text-center">
-                        <div class="row">
-                            <div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col text-center"><button class="btn btn-outline-primary text-left border rounded border-primary" type="submit" name="meterSelect" value="M6">Meter 6</button></div>
-                        </div>
-                    </div>
+					<!-- Meter 4 -->
+					<div class="col-auto text-center">
+						<div class="row">
+							<div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;"></div>
+						</div>
+						<div class="row">
+							<div class="col text-center"><button
+									class="btn btn-outline-primary text-left border rounded border-primary" type="submit"
+									name="meterSelect" value="M4">Meter 4</button></div>
+						</div>
+					</div>
 
-                    <!-- Meter 7 -->
-                    <div class="col-auto text-center">
-                        <div class="row">
-                            <div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col text-center"><button class="btn btn-outline-primary text-left border rounded border-primary" type="submit" name="meterSelect" value="M7">Meter 7</button></div>
-                        </div>
-                    </div>
+					<!-- Meter 5 -->
+					<div class="col-auto text-center">
+						<div class="row">
+							<div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;"></div>
+						</div>
+						<div class="row">
+							<div class="col text-center"><button
+									class="btn btn-outline-primary text-left border rounded border-primary" type="submit"
+									name="meterSelect" value="M5">Meter 5</button></div>
+						</div>
+					</div>
 
-                    <!-- Meter 8 -->
-                    <div class="col-auto text-center">
-                        <div class="row">
-                            <div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col text-center"><button class="btn btn-outline-primary text-left border rounded border-primary" type="submit" name="meterSelect" value="M8">Meter 8</button></div>
-                        </div>
-                    </div>
+					<!-- Meter 6 -->
+					<div class="col-auto text-center">
+						<div class="row">
+							<div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;"></div>
+						</div>
+						<div class="row">
+							<div class="col text-center"><button
+									class="btn btn-outline-primary text-left border rounded border-primary" type="submit"
+									name="meterSelect" value="M6">Meter 6</button></div>
+						</div>
+					</div>
 
-                    <!-- Meter 9 -->
-                    <div class="col-auto text-center">
-                        <div class="row">
-                            <div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col text-center"><button class="btn btn-outline-primary text-left border rounded border-primary" type="submit" name="meterSelect" value="M9">Meter 9</button></div>
-                        </div>
-                    </div>
+					<!-- Meter 7 -->
+					<div class="col-auto text-center">
+						<div class="row">
+							<div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;"></div>
+						</div>
+						<div class="row">
+							<div class="col text-center"><button
+									class="btn btn-outline-primary text-left border rounded border-primary" type="submit"
+									name="meterSelect" value="M7">Meter 7</button></div>
+						</div>
+					</div>
 
-                    <!-- Meter 10 -->
-                    <div class="col-auto text-center">
-                        <div class="row">
-                            <div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col text-center"><button class="btn btn-outline-primary text-left border rounded border-primary" type="submit" name="meterSelect" value="M10">Meter 10</button></div>
-                        </div>
-                    </div>
+					<!-- Meter 8 -->
+					<div class="col-auto text-center">
+						<div class="row">
+							<div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;"></div>
+						</div>
+						<div class="row">
+							<div class="col text-center"><button
+									class="btn btn-outline-primary text-left border rounded border-primary" type="submit"
+									name="meterSelect" value="M8">Meter 8</button></div>
+						</div>
+					</div>
 
-                </div>
-            </div>
-        </div>
-    </div>
+					<!-- Meter 9 -->
+					<div class="col-auto text-center">
+						<div class="row">
+							<div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;"></div>
+						</div>
+						<div class="row">
+							<div class="col text-center"><button
+									class="btn btn-outline-primary text-left border rounded border-primary" type="submit"
+									name="meterSelect" value="M9">Meter 9</button></div>
+						</div>
+					</div>
+
+					<!-- Meter 10 -->
+					<div class="col-auto text-center">
+						<div class="row">
+							<div class="col"><img src="static/img/meter.png" style="width: 120px;height: 150px;"></div>
+						</div>
+						<div class="row">
+							<div class="col text-center"><button
+									class="btn btn-outline-primary text-left border rounded border-primary" type="submit"
+									name="meterSelect" value="M10">Meter 10</button></div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
 </form>
 {% endblock content %}
